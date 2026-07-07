@@ -12,7 +12,13 @@ class CheckoutValidator {
     }
 
     public function init(): void {
+        // Traditional Shortcode Checkout
         add_action('woocommerce_after_checkout_validation', [$this, 'validateCheckout'], 10, 2);
+        add_action('woocommerce_checkout_order_processed', [$this, 'logSuccessfulOrder'], 10, 3);
+
+        // WooCommerce Blocks (Store API) Checkout Validation
+        add_action('woocommerce_store_api_checkout_order_processed', [$this, 'logSuccessfulOrderBlocks'], 10, 1);
+        add_action('woocommerce_store_api_validate_checkout_request', [$this, 'validateCheckoutBlocks'], 10, 1);
     }
 
     /**
@@ -36,6 +42,39 @@ class CheckoutValidator {
             // It will succeed (assuming WC validation passes), so log it as success attempt
             // In a real scenario, we might hook into woocommerce_checkout_order_processed to log the actual success,
             // but logging the successful attempt here is also valid for tracking.
+            $this->eventLogger->logAttempt('success', $customer_data, $evaluation['rule_id']);
+        }
+    }
+
+    public function logSuccessfulOrder($order_id, $posted_data, $order): void {
+        // Log is already handled in validateCheckout for success to capture attempts, 
+        // but if we want to ensure only strictly placed orders are success:
+        // For now, validateCheckout handles the success log to track all attempts (even if payment fails later).
+    }
+
+    public function logSuccessfulOrderBlocks(\Automattic\WooCommerce\StoreApi\Exceptions\RouteException $error = null): void {
+        // Blocks specific hook
+    }
+
+    public function validateCheckoutBlocks(\WP_REST_Request $request): void {
+        $billing_address = $request->get_param('billing_address');
+        
+        $customer_data = [
+            'phone' => $billing_address['phone'] ?? '',
+            'email' => $billing_address['email'] ?? '',
+            'ip'    => $this->getClientIp()
+        ];
+
+        $evaluation = $this->rulesEngine->evaluate($customer_data);
+
+        if (!$evaluation['allowed']) {
+            $this->eventLogger->logAttempt('blocked', $customer_data, $evaluation['rule_id']);
+            throw new \Automattic\WooCommerce\StoreApi\Exceptions\RouteException(
+                'woocommerce_rest_checkout_error',
+                $evaluation['reason'],
+                400
+            );
+        } else {
             $this->eventLogger->logAttempt('success', $customer_data, $evaluation['rule_id']);
         }
     }
