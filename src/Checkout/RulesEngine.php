@@ -105,13 +105,14 @@ class RulesEngine {
         // Strip non-numeric characters for checking
         $clean = preg_replace('/[^0-9]/', '', $phone);
         
-        // Too short or too long
-        if (strlen($clean) < 7 || strlen($clean) > 15) return true;
+        // Too short or too long (most valid numbers are 10-15 digits including country code)
+        if (strlen($clean) < 8 || strlen($clean) > 15) return true;
 
-        // E.g. 01700000000, 1111111111, 123456789
-        if (preg_match('/^(.)\1+$/', $clean)) return true; // All same digits
-        if (preg_match('/0000000|1111111|2222222|3333333|4444444|5555555|6666666|7777777|8888888|9999999/', $clean)) return true;
-        if (preg_match('/1234567/', $clean)) return true;
+        // Catch 5 or more repeating digits anywhere in the number (e.g. 00000, 11111)
+        if (preg_match('/(.)\1{4,}/', $clean)) return true;
+        
+        // Catch common fake sequential numbers
+        if (preg_match('/12345|54321|01234|98765/', $clean)) return true;
 
         return false;
     }
