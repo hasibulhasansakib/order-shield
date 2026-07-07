@@ -127,6 +127,11 @@ class Updater {
     }
 
     public function after_install($response, $hook_extra, $result) {
+        // Only run this logic if the plugin being updated is Order Shield
+        if (isset($hook_extra['plugin']) && $hook_extra['plugin'] !== $this->basename) {
+            return $result;
+        }
+
         global $wp_filesystem;
 
         $install_directory = plugin_dir_path($this->file);
