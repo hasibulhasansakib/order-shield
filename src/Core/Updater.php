@@ -31,19 +31,32 @@ class Updater {
 
     private function get_repository_info() {
         if (!empty($this->github_response)) {
-            return json_decode($this->github_response);
+            return $this->github_response;
         }
 
-        $request_uri = sprintf('https://api.github.com/repos/%s/%s/releases/latest', $this->username, $this->repository);
+        // Fetch the main plugin file from GitHub to read the version header
+        $request_uri = sprintf('https://raw.githubusercontent.com/%s/%s/main/order-shield.php', $this->username, $this->repository);
 
         $response = wp_remote_get($request_uri);
 
-        if (is_wp_error($response)) {
+        if (is_wp_error($response) || wp_remote_retrieve_response_code($response) !== 200) {
             return false;
         }
 
-        $this->github_response = wp_remote_retrieve_body($response);
-        return json_decode($this->github_response);
+        $file_content = wp_remote_retrieve_body($response);
+        
+        // Extract version using regex
+        if (preg_match('/^[ \t]*\*[ \t]*Version:[ \t]*(.+)$/m', $file_content, $matches)) {
+            $version = trim($matches[1]);
+            
+            $this->github_response = (object) [
+                'new_version' => $version,
+                'zipball_url' => sprintf('https://github.com/%s/%s/archive/refs/heads/main.zip', $this->username, $this->repository)
+            ];
+            return $this->github_response;
+        }
+
+        return false;
     }
 
     public function modify_transient($transient) {
@@ -53,14 +66,13 @@ class Updater {
 
         $github_info = $this->get_repository_info();
 
-        if (!$github_info || !isset($github_info->tag_name)) {
+        if (!$github_info) {
             return $transient;
         }
 
         $plugin_data = get_plugin_data($this->file);
         $current_version = $plugin_data['Version'];
-        // Remove 'v' from tag name if it exists (e.g. 'v1.0.1' -> '1.0.1')
-        $new_version = ltrim($github_info->tag_name, 'v');
+        $new_version = $github_info->new_version;
 
         if (version_compare($new_version, $current_version, '>')) {
             $plugin = [
@@ -91,7 +103,7 @@ class Updater {
         }
 
         $plugin_data = get_plugin_data($this->file);
-        $new_version = ltrim($github_info->tag_name, 'v');
+        $new_version = $github_info->new_version;
 
         $plugin = [
             'name' => $plugin_data['Name'],
@@ -101,12 +113,12 @@ class Updater {
             'version' => $new_version,
             'author' => $plugin_data['AuthorName'],
             'author_profile' => $plugin_data['AuthorURI'],
-            'last_updated' => $github_info->published_at,
+            'last_updated' => date('Y-m-d'),
             'homepage' => $plugin_data['PluginURI'],
             'short_description' => $plugin_data['Description'],
             'sections' => [
                 'Description' => $plugin_data['Description'],
-                'Updates' => $github_info->body,
+                'Updates' => 'A new version is available on GitHub (Branch: main).',
             ],
             'download_link' => $github_info->zipball_url,
         ];
@@ -118,8 +130,16 @@ class Updater {
         global $wp_filesystem;
 
         $install_directory = plugin_dir_path($this->file);
-        $wp_filesystem->move($result['destination'], $install_directory);
-        $result['destination'] = $install_directory;
+        
+        // GitHub main.zip extracts to folder like "order-shield-main", we need to move it contents correctly
+        $extracted_dir = $result['destination'];
+        
+        // Usually WP moves it to $install_directory automatically if folder names match, but main.zip has different root
+        // If the extracted folder is not the plugin directory, move its contents
+        if (basename($extracted_dir) !== basename($install_directory)) {
+            $wp_filesystem->move($extracted_dir, $install_directory, true);
+            $result['destination'] = $install_directory;
+        }
 
         if ($this->active) {
             activate_plugin($this->basename);
