@@ -9,7 +9,7 @@ class Updater {
     private string $active;
     private string $username;
     private string $repository;
-    private string $github_response;
+    private ?object $github_response = null;
 
     public function __construct(string $file) {
         $this->file = $file;
