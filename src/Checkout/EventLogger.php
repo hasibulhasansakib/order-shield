@@ -33,13 +33,17 @@ class EventLogger {
                 'phone_number' => sanitize_text_field($customer_data['phone'] ?? ''),
                 'email_address'=> sanitize_email($customer_data['email'] ?? ''),
                 'city'         => $location['city'] ?? null,
+                'region'       => $location['region'] ?? null,
+                'zip'          => $location['zip'] ?? null,
                 'country'      => $location['country'] ?? null,
+                'lat'          => $location['lat'] ?? null,
+                'lon'          => $location['lon'] ?? null,
                 'isp'          => $location['isp'] ?? null,
                 'status'       => $status,
                 'rule_id'      => $rule_id
             ],
             [
-                '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d'
+                '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d'
             ]
         );
     }

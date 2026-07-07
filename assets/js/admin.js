@@ -45,12 +45,15 @@ jQuery(document).ready(function($) {
                             ? '<span class="os-badge os-badge-blocked">Blocked</span>'
                             : '<span class="os-badge os-badge-success">Success</span>';
                             
-                        var location = log.city ? (log.city + ', ' + log.country) : 'Unknown';
+                        var locationStr = log.city ? (log.city + ', ' + log.country) : 'Unknown';
+                        var mapLink = (log.lat && log.lon) 
+                            ? '<br><a href="https://www.google.com/maps?q=' + log.lat + ',' + log.lon + '" target="_blank" style="font-size: 11px; color: #3b82f6; text-decoration: none;">View on Map 📍</a>'
+                            : '';
                         
                         html += '<tr>';
                         html += '<td>' + new Date(log.created_at).toLocaleString() + '</td>';
                         html += '<td><strong>' + log.ip_address + '</strong><br><small>' + (log.isp || '') + '</small></td>';
-                        html += '<td>' + location + '</td>';
+                        html += '<td>' + locationStr + mapLink + '</td>';
                         html += '<td>' + (log.phone_number || '-') + '<br><small>' + (log.email_address || '') + '</small></td>';
                         html += '<td>' + statusBadge + '</td>';
                         html += '<td><button class="os-btn os-btn-outline os-block-btn" data-ip="' + log.ip_address + '">Block IP</button></td>';
