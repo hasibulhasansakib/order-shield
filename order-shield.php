@@ -3,9 +3,9 @@
  * Plugin Name: Order Shield
  * Plugin URI: https://github.com/hasibulhasansakib/order-shield
  * Description: A production-ready, open-source WooCommerce fraud prevention and order protection system.
- * Version: 1.0.3
+ * Version: 1.0.4
  * Author: Hasibul Hasan Sakib
- * Author URI: https://github.com/hasibulhasansakib
+ * Author URI: https://hasibulhasansakib.com
  * Text Domain: order-shield
  * Domain Path: /languages
  * License: GPL-3.0-or-later
@@ -23,7 +23,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define Plugin Constants
-define('OS_VERSION', '1.0.3');
+define('OS_VERSION', '1.0.4');
 define('OS_PLUGIN_FILE', __FILE__);
 define('OS_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('OS_PLUGIN_URL', plugin_dir_url(__FILE__));
@@ -72,14 +72,18 @@ add_action('admin_init', function() {
     }
 });
 
-// Add Plugin Action Links
+// Add Plugin Action Links (Left Side)
 add_filter('plugin_action_links_' . plugin_basename(__FILE__), function($links) {
     $settings_link = '<a href="admin.php?page=order-shield">' . __('Settings', 'order-shield') . '</a>';
-    $dev_link = '<a href="https://hasibulhasansakib.com" target="_blank" style="color: #3b82f6; font-weight: bold;">' . __('Author', 'order-shield') . '</a>';
-    $check_update = '<a href="' . wp_nonce_url(admin_url('plugins.php?os_check_update=1'), 'os_check_update') . '">' . __('Check for updates', 'order-shield') . '</a>';
-    
     array_unshift($links, $settings_link);
-    $links[] = $dev_link;
-    $links[] = $check_update;
     return $links;
 });
+
+// Add Plugin Row Meta Links (Right Side)
+add_filter('plugin_row_meta', function($links, $file) {
+    if ($file === plugin_basename(__FILE__)) {
+        $check_update = '<a href="' . wp_nonce_url(admin_url('plugins.php?os_check_update=1'), 'os_check_update') . '">' . __('Check for updates', 'order-shield') . '</a>';
+        $links[] = $check_update;
+    }
+    return $links;
+}, 10, 2);
