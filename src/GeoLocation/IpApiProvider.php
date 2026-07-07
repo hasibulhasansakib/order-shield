@@ -12,11 +12,14 @@ class IpApiProvider implements GeoLocationProviderInterface {
      * @return array|null
      */
     public function getLocation(string $ip_address): ?array {
-        // Skip local IP addresses for testing
         if (in_array($ip_address, ['127.0.0.1', '::1'])) {
             return [
                 'city'    => 'Localhost',
+                'region'  => 'Local Area',
+                'zip'     => '1000',
                 'country' => 'Local Network',
+                'lat'     => '23.8103', // Dhaka Lat for testing
+                'lon'     => '90.4125', // Dhaka Lon for testing
                 'isp'     => 'Local ISP'
             ];
         }
