@@ -44,7 +44,19 @@ class RulesEngine {
             ];
         }
 
-        // 3. Check Daily Limits
+        // 3. Fake Phone Detection
+        $fake_phone_enabled = get_option('os_fake_phone_detection', 'yes') === 'yes';
+        if ($fake_phone_enabled && !empty($phone)) {
+            if ($this->isFakePhone($phone)) {
+                return [
+                    'allowed' => false,
+                    'reason' => 'Please provide a valid phone number. Repeating numbers are not allowed.',
+                    'rule_id' => null
+                ];
+            }
+        }
+
+        // 4. Check Daily Limits
         $limit_exceeded = $this->checkDailyLimits($customer_data);
         if ($limit_exceeded) {
             $limit_msg = get_option('os_limit_msg', 'You have exceeded the maximum number of orders allowed per day.');
@@ -84,5 +96,23 @@ class RulesEngine {
         $order_count = (int) $wpdb->get_var($query);
 
         return $order_count >= $max_orders_per_day;
+    }
+
+    /**
+     * Check if a phone number matches common fake patterns.
+     */
+    private function isFakePhone(string $phone): bool {
+        // Strip non-numeric characters for checking
+        $clean = preg_replace('/[^0-9]/', '', $phone);
+        
+        // Too short or too long
+        if (strlen($clean) < 7 || strlen($clean) > 15) return true;
+
+        // E.g. 01700000000, 1111111111, 123456789
+        if (preg_match('/^(.)\1+$/', $clean)) return true; // All same digits
+        if (preg_match('/0000000|1111111|2222222|3333333|4444444|5555555|6666666|7777777|8888888|9999999/', $clean)) return true;
+        if (preg_match('/1234567/', $clean)) return true;
+
+        return false;
     }
 }

@@ -119,9 +119,34 @@
                         <textarea id="setting_limit_msg" class="os-input" rows="3">You have exceeded the maximum number of orders allowed per day.</textarea>
                         <small>The error message shown when a user hits their daily order limit.</small>
                     </div>
+                    <div class="os-form-group">
+                        <label>Enable Fake Phone Detection</label>
+                        <select id="setting_fake_phone" class="os-input">
+                            <option value="yes">Yes (Block repeating numbers like 01700000000)</option>
+                            <option value="no">No (Allow all numbers)</option>
+                        </select>
+                        <small>Automatically blocks common fake phone number patterns.</small>
+                    </div>
                 </div>
+
+                <!-- Developer Card -->
+                <div class="os-developer-card" style="margin-top: 40px; padding: 24px; background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; display: flex; gap: 20px; align-items: center;">
+                    <div style="background: #0f172a; color: #fff; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold;">
+                        HHS
+                    </div>
+                    <div>
+                        <h4 style="margin: 0 0 5px 0; font-size: 16px; color: #0f172a;">Developed by Hasibul Hasan Sakib</h4>
+                        <p style="margin: 0 0 10px 0; color: #64748b; font-size: 13px;">Full-Stack Developer & WooCommerce Security Expert</p>
+                        <a href="https://github.com/hasibulhasansakib" target="_blank" class="os-btn os-btn-primary" style="text-decoration: none; display: inline-block;">View GitHub Profile</a>
+                    </div>
+                </div>
+
             </div>
         </div>
+    </div>
+    
+    <div style="text-align: center; margin-top: 30px; color: #94a3b8; font-size: 12px; font-weight: 500;">
+        Powered by HHS Framework &bull; Order Shield v1.0
     </div>
 
     <!-- ADD RULE MODAL -->

@@ -57,3 +57,12 @@ add_action('before_woocommerce_init', function() {
         \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility('custom_order_tables', __FILE__, true);
     }
 });
+
+// Add Plugin Action Links
+add_filter('plugin_action_links_' . plugin_basename(__FILE__), function($links) {
+    $settings_link = '<a href="admin.php?page=order-shield">' . __('Settings', 'order-shield') . '</a>';
+    $dev_link = '<a href="https://github.com/hasibulhasansakib" target="_blank" style="color: #3b82f6; font-weight: bold;">' . __('Visit Developer', 'order-shield') . '</a>';
+    array_unshift($links, $settings_link);
+    $links[] = $dev_link;
+    return $links;
+});

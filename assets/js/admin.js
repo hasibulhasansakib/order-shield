@@ -142,6 +142,7 @@ jQuery(document).ready(function($) {
                 $('#setting_max_orders').val(response.data.os_max_orders_per_day || 3);
                 $('#setting_block_msg').val(response.data.os_block_msg || 'You have been blocked from placing orders. Please contact support.');
                 $('#setting_limit_msg').val(response.data.os_limit_msg || 'You have exceeded the maximum number of orders allowed per day.');
+                $('#setting_fake_phone').val(response.data.os_fake_phone || 'yes');
             }
         });
     }
@@ -155,7 +156,8 @@ jQuery(document).ready(function($) {
             nonce: osData.nonce,
             os_max_orders_per_day: $('#setting_max_orders').val(),
             os_block_msg: $('#setting_block_msg').val(),
-            os_limit_msg: $('#setting_limit_msg').val()
+            os_limit_msg: $('#setting_limit_msg').val(),
+            os_fake_phone: $('#setting_fake_phone').val()
         }, function(response) {
             btn.text('Save Settings').prop('disabled', false);
             if (response.success) {

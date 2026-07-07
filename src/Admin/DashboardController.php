@@ -98,7 +98,8 @@ class DashboardController {
         wp_send_json_success([
             'os_max_orders_per_day' => get_option('os_max_orders_per_day', 3),
             'os_block_msg'          => get_option('os_block_msg', 'You have been blocked from placing orders. Please contact support.'),
-            'os_limit_msg'          => get_option('os_limit_msg', 'You have exceeded the maximum number of orders allowed per day.')
+            'os_limit_msg'          => get_option('os_limit_msg', 'You have exceeded the maximum number of orders allowed per day.'),
+            'os_fake_phone'         => get_option('os_fake_phone_detection', 'yes')
         ]);
     }
 
@@ -108,6 +109,7 @@ class DashboardController {
         update_option('os_max_orders_per_day', (int) $_POST['os_max_orders_per_day']);
         update_option('os_block_msg', sanitize_textarea_field($_POST['os_block_msg']));
         update_option('os_limit_msg', sanitize_textarea_field($_POST['os_limit_msg']));
+        update_option('os_fake_phone_detection', sanitize_text_field($_POST['os_fake_phone']));
         
         wp_send_json_success();
     }
