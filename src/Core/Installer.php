@@ -29,7 +29,7 @@ class Installer {
         $logs_table = $wpdb->prefix . 'os_fraud_logs';
         $rules_table = $wpdb->prefix . 'os_rules';
 
-        $sql = "CREATE TABLE IF NOT EXISTS $logs_table (
+        $sql = "CREATE TABLE $logs_table (
             id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
             ip_address varchar(45) NOT NULL,
             phone_number varchar(20) DEFAULT NULL,
@@ -46,7 +46,7 @@ class Installer {
             KEY created_at (created_at)
         ) $charset_collate;
 
-        CREATE TABLE IF NOT EXISTS $rules_table (
+        CREATE TABLE $rules_table (
             id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
             rule_type varchar(20) NOT NULL, 
             target_type varchar(20) NOT NULL,
