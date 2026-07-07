@@ -45,6 +45,11 @@ add_action('plugins_loaded', function() {
     if (class_exists(\OrderShield\Core\Plugin::class)) {
         \OrderShield\Core\Plugin::getInstance()->init();
     }
+    
+    // Initialize GitHub Auto Updater
+    if (is_admin() && class_exists(\OrderShield\Core\Updater::class)) {
+        new \OrderShield\Core\Updater(OS_PLUGIN_FILE);
+    }
 });
 
 // Register Activation and Deactivation Hooks
