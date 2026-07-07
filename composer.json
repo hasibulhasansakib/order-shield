@@ -1,0 +1,24 @@
+{
+    "name": "hasibulhasansakib/order-shield",
+    "description": "A production-ready, open-source WooCommerce fraud prevention and order protection system.",
+    "type": "wordpress-plugin",
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Hasibul Hasan Sakib",
+            "role": "Lead Developer"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "OrderShield\\": "src/"
+        }
+    },
+    "require": {
+        "php": ">=7.4"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
+    }
+}

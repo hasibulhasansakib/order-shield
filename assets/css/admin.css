@@ -1,0 +1,333 @@
+.os-dashboard-wrap {
+    margin: 20px 20px 20px 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    color: #1e293b;
+}
+
+.os-dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.os-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.os-logo svg {
+    width: 32px;
+    height: 32px;
+    color: #3b82f6;
+}
+
+.os-logo h2 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.os-header-actions span {
+    background: #f1f5f9;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #64748b;
+}
+
+/* Stats Cards */
+.os-dashboard-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.os-stat-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    border: 1px solid #f1f5f9;
+}
+
+.os-stat-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.os-stat-icon svg {
+    width: 28px;
+    height: 28px;
+}
+
+.os-stat-info h4 {
+    margin: 0 0 5px 0;
+    color: #64748b;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.os-stat-info h2 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+/* Panel */
+.os-panel {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    border: 1px solid #f1f5f9;
+    overflow: hidden;
+}
+
+.os-panel-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid #f1f5f9;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.os-panel-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+/* Buttons */
+.os-btn {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+}
+
+.os-btn-outline {
+    background: transparent;
+    border: 1px solid #cbd5e1;
+    color: #475569;
+}
+
+.os-btn-outline:hover {
+    background: #f8fafc;
+    border-color: #94a3b8;
+}
+
+/* Table */
+.os-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.os-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.os-table th, .os-table td {
+    padding: 16px 24px;
+    text-align: left;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.os-table th {
+    background: #f8fafc;
+    font-weight: 600;
+    color: #475569;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.os-table td {
+    font-size: 14px;
+    color: #334155;
+}
+
+.os-badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.os-badge-success { background: #dcfce7; color: #166534; }
+.os-badge-blocked { background: #fee2e2; color: #991b1b; }
+
+.os-text-center { text-align: center; }
+
+/* Tabs */
+.os-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.os-tab-btn {
+    padding: 10px 20px;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    font-size: 15px;
+    font-weight: 600;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.os-tab-btn:hover {
+    color: #0f172a;
+}
+
+.os-tab-btn.active {
+    color: #3b82f6;
+    border-bottom-color: #3b82f6;
+}
+
+.os-tab-pane {
+    display: none;
+}
+
+.os-tab-pane.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Forms */
+.os-settings-form {
+    padding: 24px;
+}
+
+.os-form-group {
+    margin-bottom: 24px;
+}
+
+.os-form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #0f172a;
+}
+
+.os-input {
+    width: 100%;
+    max-width: 500px;
+    padding: 10px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #334155;
+    transition: border-color 0.2s;
+}
+
+.os-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.os-form-group small {
+    display: block;
+    margin-top: 6px;
+    color: #64748b;
+    font-size: 12px;
+}
+
+.os-btn-primary {
+    background: #3b82f6;
+    color: #fff;
+    border: 1px solid #2563eb;
+}
+
+.os-btn-primary:hover {
+    background: #2563eb;
+}
+
+/* Modal */
+.os-modal {
+    display: none;
+    position: fixed;
+    z-index: 99999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(15, 23, 42, 0.5);
+    backdrop-filter: blur(4px);
+}
+
+.os-modal.show {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.2s ease;
+}
+
+.os-modal-content {
+    background-color: #fff;
+    width: 100%;
+    max-width: 450px;
+    border-radius: 12px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+    transform: translateY(0);
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.os-modal-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid #f1f5f9;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.os-modal-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.os-modal-close {
+    font-size: 24px;
+    font-weight: 700;
+    color: #94a3b8;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.2s;
+}
+
+.os-modal-close:hover {
+    color: #0f172a;
+}
+
+.os-modal-body {
+    padding: 24px;
+}
