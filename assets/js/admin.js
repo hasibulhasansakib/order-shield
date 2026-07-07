@@ -45,7 +45,13 @@ jQuery(document).ready(function($) {
                             ? '<span class="os-badge os-badge-blocked">Blocked</span>'
                             : '<span class="os-badge os-badge-success">Success</span>';
                             
-                        var locationStr = log.city ? (log.city + ', ' + log.country) : 'Unknown';
+                        var locationParts = [];
+                        if (log.city) locationParts.push(log.city);
+                        if (log.region) locationParts.push(log.region);
+                        
+                        var locationStr = locationParts.length > 0 ? locationParts.join(', ') : 'Unknown';
+                        if (log.zip) locationStr += ' - ' + log.zip;
+                        if (log.country) locationStr += '<br><small>' + log.country + '</small>';
                         var mapLink = (log.lat && log.lon) 
                             ? '<br><a href="https://www.google.com/maps?q=' + log.lat + ',' + log.lon + '" target="_blank" style="font-size: 11px; color: #3b82f6; text-decoration: none;">View on Map 📍</a>'
                             : '';
