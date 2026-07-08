@@ -14,4 +14,4 @@ First off, thank you for considering contributing to Order Shield! It's people l
 2. Ensure any new features are fully documented in the `/docs` directory.
 3. Submit a pull request with a detailed description of your changes.
 
-**Maintainer:** [Hasibul Hasan Sakib](https://hasibulhasansakib.com)
+**Maintainer:** Hasibul Hasan Sakib
