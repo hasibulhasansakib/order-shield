@@ -6,6 +6,10 @@ namespace Composer\Autoload;
 
 class ComposerStaticInitc85dc95ee1e86b598ecb351100be6372
 {
+    public static $files = array (
+        'bc0af1337b39f0d750e835f5263eb646' => __DIR__ . '/..' . '/yahnis-elsts/plugin-update-checker/load-v5p7.php',
+    );
+
     public static $prefixLengthsPsr4 = array (
         'O' =>
         array (
@@ -22,6 +26,16 @@ class ComposerStaticInitc85dc95ee1e86b598ecb351100be6372
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'OrderShield\\Admin\\AdminMenu' => __DIR__ . '/../..' . '/src/Admin/AdminMenu.php',
+        'OrderShield\\Admin\\DashboardController' => __DIR__ . '/../..' . '/src/Admin/DashboardController.php',
+        'OrderShield\\Checkout\\CheckoutValidator' => __DIR__ . '/../..' . '/src/Checkout/CheckoutValidator.php',
+        'OrderShield\\Checkout\\EventLogger' => __DIR__ . '/../..' . '/src/Checkout/EventLogger.php',
+        'OrderShield\\Checkout\\RulesEngine' => __DIR__ . '/../..' . '/src/Checkout/RulesEngine.php',
+        'OrderShield\\Core\\Installer' => __DIR__ . '/../..' . '/src/Core/Installer.php',
+        'OrderShield\\Core\\Plugin' => __DIR__ . '/../..' . '/src/Core/Plugin.php',
+        'OrderShield\\Core\\Updater' => __DIR__ . '/../..' . '/src/Core/Updater.php',
+        'OrderShield\\GeoLocation\\GeoLocationProviderInterface' => __DIR__ . '/../..' . '/src/GeoLocation/GeoLocationProviderInterface.php',
+        'OrderShield\\GeoLocation\\IpApiProvider' => __DIR__ . '/../..' . '/src/GeoLocation/IpApiProvider.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

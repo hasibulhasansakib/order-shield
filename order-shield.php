@@ -3,7 +3,7 @@
  * Plugin Name: Order Shield
  * Plugin URI: https://github.com/hasibulhasansakib/order-shield
  * Description: A production-ready, open-source WooCommerce fraud prevention and order protection system.
- * Version: 1.0.8
+ * Version: 1.0.9
  * Author: Hasibul Hasan Sakib
  * Author URI: https://hasibulhasansakib.com
  * Text Domain: order-shield
@@ -23,7 +23,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define Plugin Constants
-define('OS_VERSION', '1.0.8');
+define('OS_VERSION', '1.0.9');
 define('OS_PLUGIN_FILE', __FILE__);
 define('OS_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('OS_PLUGIN_URL', plugin_dir_url(__FILE__));
@@ -53,9 +53,18 @@ add_action('plugins_loaded', function() {
         \OrderShield\Core\Plugin::getInstance()->init();
     }
     
-    // Initialize GitHub Auto Updater
-    if (is_admin() && class_exists(\OrderShield\Core\Updater::class)) {
-        new \OrderShield\Core\Updater(OS_PLUGIN_FILE);
+    // Initialize Plugin Update Checker for GitHub auto-updates
+    if (file_exists(OS_PLUGIN_DIR . 'vendor/yahnis-elsts/plugin-update-checker/plugin-update-checker.php')) {
+        require_once OS_PLUGIN_DIR . 'vendor/yahnis-elsts/plugin-update-checker/plugin-update-checker.php';
+
+        $myUpdateChecker = \YahnisElsts\PluginUpdateChecker\v5\PucFactory::buildUpdateChecker(
+            'https://github.com/hasibulhasansakib/order-shield/',
+            OS_PLUGIN_FILE,
+            'order-shield'
+        );
+
+        // Set the branch that contains the stable release.
+        $myUpdateChecker->setBranch('main');
     }
 });
 
@@ -70,27 +79,9 @@ add_action('before_woocommerce_init', function() {
     }
 });
 
-// Handle manual Check for Updates
-add_action('admin_init', function() {
-    if (isset($_GET['os_check_update']) && $_GET['os_check_update'] === '1' && check_admin_referer('os_check_update')) {
-        delete_site_transient('update_plugins');
-        wp_safe_redirect(admin_url('plugins.php'));
-        exit;
-    }
-});
-
 // Add Plugin Action Links (Left Side)
 add_filter('plugin_action_links_' . plugin_basename(__FILE__), function($links) {
     $settings_link = '<a href="admin.php?page=order-shield">' . __('Settings', 'order-shield') . '</a>';
     array_unshift($links, $settings_link);
     return $links;
 });
-
-// Add Plugin Row Meta Links (Right Side)
-add_filter('plugin_row_meta', function($links, $file) {
-    if ($file === plugin_basename(__FILE__)) {
-        $check_update = '<a href="' . wp_nonce_url(admin_url('plugins.php?os_check_update=1'), 'os_check_update') . '">' . __('Check for updates', 'order-shield') . '</a>';
-        $links[] = $check_update;
-    }
-    return $links;
-}, 10, 2);

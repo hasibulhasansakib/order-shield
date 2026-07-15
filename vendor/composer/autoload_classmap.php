@@ -7,4 +7,14 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
+    'OrderShield\\Admin\\AdminMenu' => $baseDir . '/src/Admin/AdminMenu.php',
+    'OrderShield\\Admin\\DashboardController' => $baseDir . '/src/Admin/DashboardController.php',
+    'OrderShield\\Checkout\\CheckoutValidator' => $baseDir . '/src/Checkout/CheckoutValidator.php',
+    'OrderShield\\Checkout\\EventLogger' => $baseDir . '/src/Checkout/EventLogger.php',
+    'OrderShield\\Checkout\\RulesEngine' => $baseDir . '/src/Checkout/RulesEngine.php',
+    'OrderShield\\Core\\Installer' => $baseDir . '/src/Core/Installer.php',
+    'OrderShield\\Core\\Plugin' => $baseDir . '/src/Core/Plugin.php',
+    'OrderShield\\Core\\Updater' => $baseDir . '/src/Core/Updater.php',
+    'OrderShield\\GeoLocation\\GeoLocationProviderInterface' => $baseDir . '/src/GeoLocation/GeoLocationProviderInterface.php',
+    'OrderShield\\GeoLocation\\IpApiProvider' => $baseDir . '/src/GeoLocation/IpApiProvider.php',
 );
