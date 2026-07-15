@@ -38,8 +38,29 @@
             </div>
         </div>
     </div>
-
+    
     <div class="os-dashboard-main">
+        <div class="os-dashboard-filters" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding: 16px 24px; background: #fff; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;">
+            <div class="os-filter-group" style="display: flex; align-items: center; gap: 12px;">
+                <label style="font-size: 14px; font-weight: 600; color: #475569;">Date Range:</label>
+                <select id="os-date-filter" class="os-input" style="min-width: 180px; margin: 0; padding-top: 6px; padding-bottom: 6px;">
+                    <option value="today">Today</option>
+                    <option value="yesterday">Yesterday</option>
+                    <option value="last_7_days">Last 7 Days</option>
+                    <option value="this_month">This Month</option>
+                    <option value="all_time">All Time</option>
+                </select>
+            </div>
+            
+            <div class="os-cleanup-group" style="display: flex; align-items: center; gap: 12px; border-left: 1px solid #e2e8f0; padding-left: 20px;">
+                <label style="font-size: 13px; color: #64748b;">Cleanup old logs:</label>
+                <div style="display: flex; gap: 8px;">
+                    <input type="date" id="os_cleanup_date" class="os-input" style="max-width: 140px; margin: 0; padding-top: 6px; padding-bottom: 6px; font-size: 13px;">
+                    <button class="os-btn os-btn-outline" id="os-clear-logs-btn" style="color: #ef4444; border-color: #ef4444; padding: 6px 12px; font-size: 13px;">Clear</button>
+                </div>
+            </div>
+        </div>
+
         <div class="os-tabs">
             <button class="os-tab-btn active" data-target="tab-activity">Activity Log</button>
             <button class="os-tab-btn" data-target="tab-rules">Rules & Blocklist</button>
@@ -127,20 +148,6 @@
                             <option value="no">No (Allow all numbers)</option>
                         </select>
                         <small>Automatically blocks common fake phone number patterns.</small>
-                    </div>
-                </div>
-
-                <div class="os-panel-header" style="margin-top: 40px; border-top: 1px solid #e2e8f0; padding-top: 24px;">
-                    <h3>Log Cleanup Tool</h3>
-                </div>
-                <div class="os-settings-form">
-                    <div class="os-form-group">
-                        <label>Delete Logs Older Than</label>
-                        <div style="display: flex; gap: 10px;">
-                            <input type="date" id="os_cleanup_date" class="os-input" style="max-width: 200px;">
-                            <button class="os-btn os-btn-outline" id="os-clear-logs-btn" style="color: #ef4444; border-color: #ef4444;">Clear Old Logs</button>
-                        </div>
-                        <small>All activity logs older than the selected date will be permanently deleted to save database space.</small>
                     </div>
                 </div>
 

@@ -28,11 +28,12 @@ class DashboardController {
         global $wpdb;
         $logs_table = $wpdb->prefix . 'os_fraud_logs';
 
-        $today = date('Y-m-d 00:00:00');
+        $filter = isset($_POST['date_filter']) ? sanitize_text_field($_POST['date_filter']) : 'today';
+        $date_query = $this->getDateQueryCondition($filter);
 
-        $total_attempts = $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM $logs_table WHERE created_at >= %s", $today));
-        $blocked_attempts = $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM $logs_table WHERE status = 'blocked' AND created_at >= %s", $today));
-        $success_attempts = $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM $logs_table WHERE status = 'success' AND created_at >= %s", $today));
+        $total_attempts = $wpdb->get_var("SELECT COUNT(*) FROM $logs_table WHERE $date_query");
+        $blocked_attempts = $wpdb->get_var("SELECT COUNT(*) FROM $logs_table WHERE status = 'blocked' AND $date_query");
+        $success_attempts = $wpdb->get_var("SELECT COUNT(*) FROM $logs_table WHERE status = 'success' AND $date_query");
 
         wp_send_json_success([
             'total_today' => (int) $total_attempts,
@@ -50,8 +51,12 @@ class DashboardController {
         $per_page = 20;
         $offset = ($page - 1) * $per_page;
 
+        $filter = isset($_POST['date_filter']) ? sanitize_text_field($_POST['date_filter']) : 'today';
+        $date_query = $this->getDateQueryCondition($filter);
+
         $results = $wpdb->get_results("
             SELECT * FROM $logs_table 
+            WHERE $date_query
             ORDER BY created_at DESC 
             LIMIT $per_page OFFSET $offset
         ", ARRAY_A);
@@ -59,6 +64,22 @@ class DashboardController {
         wp_send_json_success([
             'logs' => $results
         ]);
+    }
+
+    private function getDateQueryCondition(string $filter): string {
+        switch ($filter) {
+            case 'today':
+                return "created_at >= '" . date('Y-m-d 00:00:00') . "'";
+            case 'yesterday':
+                return "created_at >= '" . date('Y-m-d 00:00:00', strtotime('-1 day')) . "' AND created_at <= '" . date('Y-m-d 23:59:59', strtotime('-1 day')) . "'";
+            case 'last_7_days':
+                return "created_at >= '" . date('Y-m-d 00:00:00', strtotime('-7 days')) . "'";
+            case 'this_month':
+                return "created_at >= '" . date('Y-m-01 00:00:00') . "'";
+            case 'all_time':
+            default:
+                return "1=1";
+        }
     }
 
     public function getRules(): void {

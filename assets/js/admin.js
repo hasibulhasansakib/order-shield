@@ -13,9 +13,11 @@ jQuery(document).ready(function($) {
 
     // --- ACTIVITY LOG ---
     function loadStats() {
+        var dateFilter = $('#os-date-filter').val() || 'today';
         $.post(osData.ajaxurl, {
             action: 'os_get_stats',
-            nonce: osData.nonce
+            nonce: osData.nonce,
+            date_filter: dateFilter
         }, function(response) {
             if (response.success) {
                 $('#os-stat-total').text(response.data.total_today);
@@ -26,19 +28,21 @@ jQuery(document).ready(function($) {
     }
 
     function loadLogs() {
-        $('#os-logs-tbody').html('<tr><td colspan="6" class="os-text-center">Loading logs...</td></tr>');
+        $('#os-logs-tbody').html('<tr><td colspan="7" class="os-text-center">Loading logs...</td></tr>');
+        var dateFilter = $('#os-date-filter').val() || 'today';
         
         $.post(osData.ajaxurl, {
             action: 'os_get_logs',
             nonce: osData.nonce,
-            page: 1
+            page: 1,
+            date_filter: dateFilter
         }, function(response) {
             if (response.success && response.data.logs) {
                 var html = '';
                 var logs = response.data.logs;
                 
                 if (logs.length === 0) {
-                    html = '<tr><td colspan="6" class="os-text-center">No activity recorded yet.</td></tr>';
+                    html = '<tr><td colspan="7" class="os-text-center">No activity recorded yet for the selected date range.</td></tr>';
                 } else {
                     logs.forEach(function(log) {
                         var statusBadge = log.status === 'blocked' 
@@ -238,6 +242,11 @@ jQuery(document).ready(function($) {
                 alert('Error saving rule.');
             }
         });
+    });
+
+    $('#os-date-filter').on('change', function() {
+        loadStats();
+        loadLogs();
     });
 
     $('#os-refresh-logs').on('click', function() {
