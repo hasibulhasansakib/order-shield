@@ -1,8 +1,6 @@
 # Order Shield - WooCommerce Fraud Prevention
 
 <div align="center">
-  <img src="https://raw.githubusercontent.com/hasibulhasansakib/order-shield/main/assets/screenshots/banner.png" alt="Order Shield Banner" width="800">
-  <br><br>
   <p>A production-ready, highly scalable fraud prevention and order protection system for WooCommerce.</p>
 </div>
 
