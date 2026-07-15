@@ -42,7 +42,7 @@ Order Shield is an open-source project. We welcome contributions from developers
 ## 👨‍💻 Author
 
 **Hasibul Hasan Sakib**  
-Full-Stack Web Developer & WordPress Expert  
+Web, WooCommerce & AI Automation Specialist  
 Website: [hasibulhasansakib.com](https://hasibulhasansakib.com)  
 
 ## 📄 License

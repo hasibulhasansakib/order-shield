@@ -158,7 +158,7 @@
                     </div>
                     <div>
                         <h4 style="margin: 0 0 5px 0; font-size: 16px; color: #0f172a;">Developed by Hasibul Hasan Sakib</h4>
-                        <p style="margin: 0 0 10px 0; color: #64748b; font-size: 13px;">Full-Stack Developer & WooCommerce Security Expert</p>
+                        <p style="margin: 0 0 10px 0; color: #64748b; font-size: 13px;">Web, WooCommerce & AI Automation Specialist</p>
                         <a href="https://github.com/hasibulhasansakib" target="_blank" class="os-btn os-btn-primary" style="text-decoration: none; display: inline-block;">View GitHub Profile</a>
                     </div>
                 </div>
