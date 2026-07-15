@@ -53,11 +53,30 @@ jQuery(document).ready(function($) {
                         if (log.zip) locationStr += ' - ' + log.zip;
                         if (log.country) locationStr += '<br><small>' + log.country + '</small>';
                         
+                        var productsCol = '-';
+                        if (log.cart_data) {
+                            try {
+                                var cartItems = JSON.parse(log.cart_data);
+                                if (cartItems && cartItems.length > 0) {
+                                    var firstItemName = cartItems[0].name.substring(0, 20) + (cartItems[0].name.length > 20 ? '...' : '');
+                                    productsCol = '<div style="display:flex; align-items:center; gap:8px;">' + 
+                                                  '<button class="os-btn-icon os-view-products" data-cart=\'' + escape(JSON.stringify(cartItems)) + '\' title="View Products">' +
+                                                  '<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>' +
+                                                  '</button>' +
+                                                  '<span style="font-size:12px; color:#64748b;">' + firstItemName + (cartItems.length > 1 ? ' (+' + (cartItems.length-1) + ')' : '') + '</span>' +
+                                                  '</div>';
+                                }
+                            } catch (e) {
+                                console.error('Failed to parse cart data', e);
+                            }
+                        }
+
                         html += '<tr>';
                         html += '<td>' + new Date(log.created_at).toLocaleString() + '</td>';
                         html += '<td><strong>' + log.ip_address + '</strong><br><small>' + (log.isp || '') + '</small></td>';
                         html += '<td>' + locationStr + '</td>';
                         html += '<td>' + (log.phone_number || '-') + '<br><small>' + (log.email_address || '') + '</small></td>';
+                        html += '<td>' + productsCol + '</td>';
                         html += '<td>' + statusBadge + '</td>';
                         html += '<td><button class="os-btn os-btn-outline os-block-btn" data-ip="' + log.ip_address + '">Block IP</button></td>';
                         html += '</tr>';
@@ -180,10 +199,10 @@ jQuery(document).ready(function($) {
     });
 
     $('.os-modal-close').on('click', function() {
-        $('#os-rule-modal').removeClass('show');
+        $(this).closest('.os-modal').removeClass('show');
     });
 
-    $('#os-rule-modal').on('click', function(e) {
+    $('.os-modal').on('click', function(e) {
         if ($(e.target).hasClass('os-modal')) {
             $(this).removeClass('show');
         }
@@ -224,6 +243,68 @@ jQuery(document).ready(function($) {
     $('#os-refresh-logs').on('click', function() {
         loadStats();
         loadLogs();
+    });
+
+    // Clear Old Logs
+    $('#os-clear-logs-btn').on('click', function() {
+        var dateVal = $('#os_cleanup_date').val();
+        if (!dateVal) {
+            alert('Please select a date first.');
+            return;
+        }
+
+        if (!confirm('Are you sure you want to permanently delete all logs older than ' + dateVal + '? This cannot be undone.')) {
+            return;
+        }
+
+        var btn = $(this);
+        var originalText = btn.text();
+        btn.text('Deleting...').prop('disabled', true);
+
+        $.post(osData.ajaxurl, {
+            action: 'os_clear_logs',
+            nonce: osData.nonce,
+            date: dateVal
+        }, function(response) {
+            btn.text(originalText).prop('disabled', false);
+            if (response.success) {
+                alert('Successfully deleted ' + response.data.deleted + ' old log entries.');
+                loadStats();
+                loadLogs();
+            } else {
+                alert('Error: ' + response.data);
+            }
+        });
+    });
+
+    // View Products Modal
+    $(document).on('click', '.os-view-products', function() {
+        var cartDataStr = unescape($(this).attr('data-cart'));
+        try {
+            var cartItems = JSON.parse(cartDataStr);
+            var html = '';
+            
+            cartItems.forEach(function(item) {
+                var imgSrc = item.image ? item.image : 'https://via.placeholder.com/60?text=No+Image';
+                html += '<div class="os-product-item">';
+                html += '<div class="os-product-img-wrapper"><img src="' + imgSrc + '" alt="Product Image"></div>';
+                html += '<div class="os-product-details">';
+                if (item.permalink) {
+                    html += '<a href="' + item.permalink + '" target="_blank" class="os-product-name">' + item.name + '</a>';
+                } else {
+                    html += '<span class="os-product-name">' + item.name + '</span>';
+                }
+                html += '<div class="os-product-meta">';
+                html += '<span class="os-product-price">' + item.price + '</span>';
+                html += '<span class="os-product-qty">Qty: ' + item.qty + '</span>';
+                html += '</div></div></div>';
+            });
+            
+            $('#os-products-list').html(html);
+            $('#os-products-modal').addClass('show');
+        } catch (e) {
+            alert('Failed to load product details.');
+        }
     });
 
     // Initial Load

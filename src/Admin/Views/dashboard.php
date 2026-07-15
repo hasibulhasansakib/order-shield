@@ -61,6 +61,7 @@
                                 <th>IP Address</th>
                                 <th>Location</th>
                                 <th>Phone / Email</th>
+                                <th>Products</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
@@ -129,6 +130,20 @@
                     </div>
                 </div>
 
+                <div class="os-panel-header" style="margin-top: 40px; border-top: 1px solid #e2e8f0; padding-top: 24px;">
+                    <h3>Log Cleanup Tool</h3>
+                </div>
+                <div class="os-settings-form">
+                    <div class="os-form-group">
+                        <label>Delete Logs Older Than</label>
+                        <div style="display: flex; gap: 10px;">
+                            <input type="date" id="os_cleanup_date" class="os-input" style="max-width: 200px;">
+                            <button class="os-btn os-btn-outline" id="os-clear-logs-btn" style="color: #ef4444; border-color: #ef4444;">Clear Old Logs</button>
+                        </div>
+                        <small>All activity logs older than the selected date will be permanently deleted to save database space.</small>
+                    </div>
+                </div>
+
                 <!-- Developer Card -->
                 <div class="os-developer-card" style="margin-top: 40px; padding: 24px; background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; display: flex; gap: 20px; align-items: center;">
                     <div style="background: #0f172a; color: #fff; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold;">
@@ -181,6 +196,21 @@
                     <input type="text" id="new_reason" class="os-input" placeholder="Why are you adding this rule?">
                 </div>
                 <button class="os-btn os-btn-primary" id="os-submit-rule" style="width: 100%;">Save Rule</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRODUCTS MODAL -->
+    <div id="os-products-modal" class="os-modal">
+        <div class="os-modal-content" style="max-width: 600px;">
+            <div class="os-modal-header">
+                <h3>Attempted Order Items</h3>
+                <span class="os-modal-close">&times;</span>
+            </div>
+            <div class="os-modal-body" style="padding: 0;">
+                <div id="os-products-list" class="os-products-list">
+                    <!-- Products will be dynamically loaded here -->
+                </div>
             </div>
         </div>
     </div>

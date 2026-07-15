@@ -11,6 +11,7 @@ class DashboardController {
         add_action('wp_ajax_os_delete_rule', [$this, 'deleteRule']);
         add_action('wp_ajax_os_get_settings', [$this, 'getSettings']);
         add_action('wp_ajax_os_save_settings', [$this, 'saveSettings']);
+        add_action('wp_ajax_os_clear_logs', [$this, 'clearLogs']);
     }
 
     private function verifyNonce(): void {
@@ -112,5 +113,32 @@ class DashboardController {
         update_option('os_fake_phone_detection', sanitize_text_field($_POST['os_fake_phone']));
         
         wp_send_json_success();
+    }
+
+    public function clearLogs(): void {
+        $this->verifyNonce();
+        global $wpdb;
+        $logs_table = $wpdb->prefix . 'os_fraud_logs';
+        
+        $date = sanitize_text_field($_POST['date']);
+        if (empty($date)) {
+            wp_send_json_error('Invalid date provided.');
+        }
+
+        // Validate date format YYYY-MM-DD
+        if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
+            wp_send_json_error('Invalid date format. Use YYYY-MM-DD.');
+        }
+
+        // Delete logs before this date
+        $result = $wpdb->query(
+            $wpdb->prepare("DELETE FROM $logs_table WHERE created_at < %s", $date . ' 00:00:00')
+        );
+
+        if ($result !== false) {
+            wp_send_json_success(['deleted' => $result]);
+        } else {
+            wp_send_json_error('Failed to clear logs.');
+        }
     }
 }

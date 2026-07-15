@@ -32,17 +32,18 @@ class CheckoutValidator {
             'ip'    => $this->getClientIp()
         ];
 
+        $cart_snapshot = $this->getCartSnapshot();
         $evaluation = $this->rulesEngine->evaluate($customer_data);
 
         if (!$evaluation['allowed']) {
             // Block the order and log the attempt
             $errors->add('validation', $evaluation['reason']);
-            $this->eventLogger->logAttempt('blocked', $customer_data, $evaluation['rule_id']);
+            $this->eventLogger->logAttempt('blocked', $customer_data, $evaluation['rule_id'], $cart_snapshot);
         } else {
             // It will succeed (assuming WC validation passes), so log it as success attempt
             // In a real scenario, we might hook into woocommerce_checkout_order_processed to log the actual success,
             // but logging the successful attempt here is also valid for tracking.
-            $this->eventLogger->logAttempt('success', $customer_data, $evaluation['rule_id']);
+            $this->eventLogger->logAttempt('success', $customer_data, $evaluation['rule_id'], $cart_snapshot);
         }
     }
 
@@ -65,17 +66,18 @@ class CheckoutValidator {
             'ip'    => $this->getClientIp()
         ];
 
+        $cart_snapshot = $this->getCartSnapshot();
         $evaluation = $this->rulesEngine->evaluate($customer_data);
 
         if (!$evaluation['allowed']) {
-            $this->eventLogger->logAttempt('blocked', $customer_data, $evaluation['rule_id']);
+            $this->eventLogger->logAttempt('blocked', $customer_data, $evaluation['rule_id'], $cart_snapshot);
             throw new \Automattic\WooCommerce\StoreApi\Exceptions\RouteException(
                 'woocommerce_rest_checkout_error',
                 $evaluation['reason'],
                 400
             );
         } else {
-            $this->eventLogger->logAttempt('success', $customer_data, $evaluation['rule_id']);
+            $this->eventLogger->logAttempt('success', $customer_data, $evaluation['rule_id'], $cart_snapshot);
         }
     }
 
@@ -89,5 +91,48 @@ class CheckoutValidator {
             $ip = $_SERVER['REMOTE_ADDR'] ?? '';
         }
         return trim($ip);
+    }
+
+    /**
+     * Get a snapshot of the current cart contents safely
+     */
+    private function getCartSnapshot(): ?string {
+        if (!isset(WC()->cart)) {
+            return null;
+        }
+
+        $items = [];
+        $cart_contents = WC()->cart->get_cart();
+        
+        if (empty($cart_contents)) {
+            return null;
+        }
+
+        foreach ($cart_contents as $cart_item_key => $cart_item) {
+            $_product = $cart_item['data'];
+            if (!$_product) {
+                continue;
+            }
+
+            $img_url = '';
+            $image_id = $_product->get_image_id();
+            if ($image_id) {
+                $img_src = wp_get_attachment_image_src($image_id, 'thumbnail');
+                if ($img_src) {
+                    $img_url = $img_src[0];
+                }
+            }
+
+            $items[] = [
+                'id'        => $_product->get_id(),
+                'name'      => $_product->get_name(),
+                'qty'       => $cart_item['quantity'],
+                'price'     => strip_tags(wc_price($_product->get_price())),
+                'image'     => $img_url,
+                'permalink' => $_product->get_permalink()
+            ];
+        }
+
+        return !empty($items) ? json_encode($items) : null;
     }
 }

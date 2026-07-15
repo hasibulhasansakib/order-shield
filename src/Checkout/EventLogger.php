@@ -17,8 +17,9 @@ class EventLogger {
      * @param string $status 'success' or 'blocked'
      * @param array $customer_data ['phone' => '', 'email' => '']
      * @param int|null $rule_id ID of the rule that blocked it (if any)
+     * @param string|null $cart_data JSON string containing cart snapshot
      */
-    public function logAttempt(string $status, array $customer_data, ?int $rule_id = null): void {
+    public function logAttempt(string $status, array $customer_data, ?int $rule_id = null, ?string $cart_data = null): void {
         global $wpdb;
 
         $ip_address = $this->getClientIp();
@@ -39,11 +40,12 @@ class EventLogger {
                 'lat'          => $location['lat'] ?? null,
                 'lon'          => $location['lon'] ?? null,
                 'isp'          => $location['isp'] ?? null,
+                'cart_data'    => $cart_data,
                 'status'       => $status,
                 'rule_id'      => $rule_id
             ],
             [
-                '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d'
+                '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d'
             ]
         );
     }

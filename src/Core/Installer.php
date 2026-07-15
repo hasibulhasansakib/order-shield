@@ -19,6 +19,17 @@ class Installer {
     }
 
     /**
+     * Ensure database is up to date during normal boots
+     */
+    public static function checkDatabaseVersion(): void {
+        $db_version = get_option('os_db_version', '1.0');
+        if (version_compare($db_version, OS_VERSION, '<')) {
+            self::createDatabaseTables();
+            update_option('os_db_version', OS_VERSION);
+        }
+    }
+
+    /**
      * Create custom database tables for high-performance logging and rules.
      */
     private static function createDatabaseTables(): void {
@@ -41,6 +52,7 @@ class Installer {
             lat varchar(50) DEFAULT NULL,
             lon varchar(50) DEFAULT NULL,
             isp varchar(255) DEFAULT NULL,
+            cart_data longtext DEFAULT NULL,
             status varchar(20) NOT NULL DEFAULT 'success',
             rule_id bigint(20) unsigned DEFAULT NULL,
             created_at datetime DEFAULT CURRENT_TIMESTAMP,

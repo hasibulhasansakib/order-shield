@@ -3,7 +3,7 @@
  * Plugin Name: Order Shield
  * Plugin URI: https://github.com/hasibulhasansakib/order-shield
  * Description: A production-ready, open-source WooCommerce fraud prevention and order protection system.
- * Version: 1.1.0
+ * Version: 1.1.1
  * Author: Hasibul Hasan Sakib
  * Author URI: https://hasibulhasansakib.com
  * Text Domain: order-shield
@@ -23,7 +23,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define Plugin Constants
-define('OS_VERSION', '1.1.0');
+define('OS_VERSION', '1.1.1');
 define('OS_PLUGIN_FILE', __FILE__);
 define('OS_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('OS_PLUGIN_URL', plugin_dir_url(__FILE__));
@@ -47,6 +47,10 @@ add_action('plugins_loaded', function() {
             echo '<div class="notice notice-error"><p><strong>Order Shield:</strong> WooCommerce is missing or deactivated. Order Shield requires WooCommerce to protect your orders. The plugin is currently suspended.</p></div>';
         });
         return;
+    }
+
+    if (class_exists(\OrderShield\Core\Installer::class)) {
+        \OrderShield\Core\Installer::checkDatabaseVersion();
     }
 
     if (class_exists(\OrderShield\Core\Plugin::class)) {
