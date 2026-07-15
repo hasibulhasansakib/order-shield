@@ -78,8 +78,9 @@ class RulesEngine {
         global $wpdb;
         $logs_table = $wpdb->prefix . 'os_fraud_logs';
 
-        // Get limits from settings (mocking for now, will implement settings later)
+        // Get limits from settings
         $max_orders_per_day = (int) get_option('os_max_orders_per_day', 3);
+        if ($max_orders_per_day <= 0) return false;
 
         $phone = $customer_data['phone'] ?? '';
         $email = $customer_data['email'] ?? '';
@@ -87,11 +88,32 @@ class RulesEngine {
 
         $today = date('Y-m-d 00:00:00');
 
+        $conditions = [];
+        $params = [$today];
+
+        if (!empty($ip)) {
+            $conditions[] = "ip_address = %s";
+            $params[] = $ip;
+        }
+        if (!empty($phone)) {
+            $conditions[] = "phone_number = %s";
+            $params[] = $phone;
+        }
+        if (!empty($email)) {
+            $conditions[] = "email_address = %s";
+            $params[] = $email;
+        }
+
+        if (empty($conditions)) {
+            return false;
+        }
+
+        $where_or = implode(' OR ', $conditions);
+
         $query = $wpdb->prepare("
             SELECT COUNT(id) FROM $logs_table 
-            WHERE status = 'success' AND created_at >= %s AND 
-            (ip_address = %s OR phone_number = %s OR email_address = %s)
-        ", $today, $ip, $phone, $email);
+            WHERE status = 'success' AND created_at >= %s AND ($where_or)
+        ", $params);
 
         $order_count = (int) $wpdb->get_var($query);
 
