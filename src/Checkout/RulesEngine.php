@@ -99,10 +99,6 @@ class RulesEngine {
             $conditions[] = "phone_number = %s";
             $params[] = $phone;
         }
-        if (!empty($email)) {
-            $conditions[] = "email_address = %s";
-            $params[] = $email;
-        }
 
         if (empty($conditions)) {
             return false;
